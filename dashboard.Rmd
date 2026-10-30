@@ -1,0 +1,224 @@
+---
+title: "New York Weather: One Station in 2010"
+output:
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: scroll
+    theme: cosmo
+    navbar:
+      - title: "Home"
+        href: index.html
+        align: right
+      - title: "Resume"
+        href: resume.html
+        align: right
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+
+library(tidyverse)
+library(plotly)
+
+data("ny_noaa", package = "p8105.datasets")
+
+weather_df =
+  ny_noaa |>
+  filter(
+    id == "USC00300055",
+    date >= as.Date("2010-01-01"),
+    date < as.Date("2011-01-01")
+  ) |>
+  mutate(
+    tmax = as.numeric(tmax) / 10,
+    tmin = as.numeric(tmin) / 10,
+    month = factor(
+      as.integer(format(date, "%m")),
+      levels = 1:12,
+      labels = month.abb
+    )
+  ) |>
+  select(id, date, month, tmax, tmin) |>
+  arrange(date)
+
+weather_check =
+  weather_df |>
+  summarise(
+    n_observations = n(),
+    n_dates = n_distinct(date),
+    missing_tmax = sum(is.na(tmax)),
+    missing_tmin = sum(is.na(tmin)),
+    reversed_temperatures = sum(tmin > tmax, na.rm = TRUE)
+  )
+
+stopifnot(
+  weather_check$n_observations == 365,
+  weather_check$n_dates == 365,
+  weather_check$missing_tmax == 0,
+  weather_check$missing_tmin == 0,
+  weather_check$reversed_temperatures == 0
+)
+
+monthly_df =
+  weather_df |>
+  group_by(month) |>
+  summarise(
+    mean_tmax = mean(tmax, na.rm = TRUE),
+    mean_tmin = mean(tmin, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  pivot_longer(
+    cols = starts_with("mean_"),
+    names_to = "measure",
+    values_to = "temperature"
+  ) |>
+  mutate(
+    measure = recode(
+      measure,
+      mean_tmax = "Daily maximum",
+      mean_tmin = "Daily minimum"
+    ),
+    hover_text = paste0(
+      "Month: ", month,
+      "<br>Measure: ", measure,
+      "<br>Monthly mean: ", round(temperature, 1), " °C"
+    )
+  )
+
+theme_set(
+  theme_minimal(base_size = 14) +
+    theme(
+      legend.position = "bottom",
+      panel.grid.minor = element_blank()
+    )
+)
+```
+
+Row {data-height=330}
+-----------------------------------------------------------------------
+
+### How to read this dashboard
+
+[Return to the homepage](index.html) · [Resume](resume.html)
+
+The data come from `ny_noaa` in the `p8105.datasets` package. This dashboard
+uses station **USC00300055** from **January 1 to December 31, 2010**. I chose
+this station-year because it has a complete year of daily maximum and minimum
+temperature observations. All three plots use this same station and year.
+
+There are **`r weather_check$n_observations` observations** on
+**`r weather_check$n_dates` distinct dates**. The maximum-temperature and
+minimum-temperature variables contain **`r weather_check$missing_tmax`** and
+**`r weather_check$missing_tmin`** missing values, respectively. There are
+**`r weather_check$reversed_temperatures`** records with a minimum temperature
+greater than the maximum temperature. No observations were removed or sampled
+after selecting the station and year.
+
+The original temperature fields are stored as character values in tenths of
+degrees Celsius. I converted them to numeric values and divided by 10; all
+temperature axes below use **degrees Celsius (°C)**. Monthly averages give
+each observed day equal weight at this one station. These plots describe one
+station-year and do not estimate a statewide average or a long-term climate trend.
+
+Hover over a plot to inspect values. Drag to zoom; double-click to reset the
+view. On the line plot, click a legend item to show or hide that series.
+
+Row {data-height=450}
+-----------------------------------------------------------------------
+
+### Monthly mean daily temperatures — line plot
+
+```{r monthly-line}
+monthly_plot =
+  ggplot(
+    monthly_df,
+    aes(
+      x = month,
+      y = temperature,
+      color = measure,
+      group = measure,
+      text = hover_text
+    )
+  ) +
+  geom_line(linewidth = 0.9) +
+  geom_point(size = 2) +
+  scale_color_manual(values = c("#D55E00", "#0072B2")) +
+  labs(
+    x = "Month (2010)",
+    y = "Monthly mean temperature (°C)",
+    color = NULL
+  )
+
+ggplotly(monthly_plot, tooltip = "text") |>
+  layout(
+    margin = list(l = 75, r = 25, b = 100, t = 20),
+    legend = list(orientation = "h", x = 0.2, y = -0.2)
+  ) |>
+  config(displaylogo = FALSE)
+```
+
+Row {data-height=500}
+-----------------------------------------------------------------------
+
+### Daily minimum versus maximum temperature — scatterplot
+
+```{r daily-scatter}
+scatter_df =
+  weather_df |>
+  mutate(
+    hover_text = paste0(
+      "Date: ", date,
+      "<br>Minimum: ", tmin, " °C",
+      "<br>Maximum: ", tmax, " °C"
+    )
+  )
+
+scatter_plot =
+  ggplot(scatter_df, aes(x = tmin, y = tmax, text = hover_text)) +
+  geom_point(color = "#0072B2", alpha = 0.65, size = 1.8) +
+  labs(
+    x = "Daily minimum temperature (°C)",
+    y = "Daily maximum temperature (°C)"
+  )
+
+ggplotly(scatter_plot, tooltip = "text") |>
+  layout(margin = list(l = 75, r = 25, b = 75, t = 20)) |>
+  config(displaylogo = FALSE)
+```
+
+Row {data-height=500}
+-----------------------------------------------------------------------
+
+### Daily maximum temperatures by month — boxplot
+
+```{r monthly-box}
+box_plot =
+  ggplot(weather_df, aes(x = month, y = tmax)) +
+  geom_boxplot(fill = "#56B4E9", alpha = 0.7, width = 0.65) +
+  labs(
+    x = "Month (2010)",
+    y = "Daily maximum temperature (°C)"
+  )
+
+ggplotly(box_plot) |>
+  layout(margin = list(l = 75, r = 25, b = 75, t = 20)) |>
+  config(displaylogo = FALSE)
+```
+
+Row {data-height=180}
+-----------------------------------------------------------------------
+
+### Notes and sources
+
+The line plot shows monthly means, the scatterplot shows individual days,
+and the boxplot summarizes within-month variation in daily maximum temperature.
+The two temperature series are plotted on the same Celsius scale. The
+boxplot summarizes the observations rather than plotting a monthly average.
+
+Data: `p8105.datasets::ny_noaa`.
+[Package documentation](https://p8105.github.io/p8105.datasets/reference/ny_noaa.html).
+Course assignment: [P8105 Homework 4](https://p8105.com/homework_4.html).

@@ -1,0 +1,25 @@
+---
+title: "Welcome"
+output:
+  html_document:
+    theme: flatly
+    highlight: textmate
+    toc: false
+---
+
+## Zhiquan Chen
+
+Welcome to my website. My work in P8105 at Columbia University focuses on
+organizing data, writing reproducible analyses, and communicating results
+through clear visualizations.
+
+This website brings together my course projects and an interactive exploration
+of New York weather observations.
+
+- [Resume and selected projects](resume.html)
+- [Interactive weather dashboard](dashboard.html)
+- [GitHub profile](https://github.com/Chenzq2333)
+
+The weather dashboard uses daily observations from one weather station in 2010.
+You can hover over the plots to inspect values, zoom into a region, and compare
+temperature patterns across months.
