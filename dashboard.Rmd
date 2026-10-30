@@ -1,16 +1,26 @@
 ---
-title: "New York Weather: One Station in 2010"
+title: "New York Weather | 2010"
 output:
   flexdashboard::flex_dashboard:
     orientation: rows
     vertical_layout: scroll
-    theme: cosmo
+    theme: flatly
+    css: styles.css
     navbar:
       - title: "Home"
         href: index.html
         align: right
       - title: "Resume"
         href: resume.html
+        align: right
+      - title: "GitHub"
+        href: https://github.com/Chenzq2333
+        align: right
+      - title: "Email"
+        href: mailto:zhiquanchen64@gmail.com
+        align: right
+      - title: "LinkedIn"
+        href: https://www.linkedin.com/in/zhiquan-chen-039a2738b/
         align: right
 ---
 
@@ -21,7 +31,9 @@ knitr::opts_chunk$set(
   warning = FALSE
 )
 
-library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
 library(plotly)
 
 data("ny_noaa", package = "p8105.datasets")
@@ -63,14 +75,17 @@ stopifnot(
   weather_check$reversed_temperatures == 0
 )
 
-monthly_df =
+monthly_summary =
   weather_df |>
   group_by(month) |>
   summarise(
     mean_tmax = mean(tmax, na.rm = TRUE),
     mean_tmin = mean(tmin, na.rm = TRUE),
     .groups = "drop"
-  ) |>
+  )
+
+monthly_df =
+  monthly_summary |>
   pivot_longer(
     cols = starts_with("mean_"),
     names_to = "measure",
@@ -98,39 +113,10 @@ theme_set(
 )
 ```
 
-Row {data-height=330}
------------------------------------------------------------------------
-
-### How to read this dashboard
-
-[Return to the homepage](index.html) · [Resume](resume.html)
-
-The data come from `ny_noaa` in the `p8105.datasets` package. This dashboard
-uses station **USC00300055** from **January 1 to December 31, 2010**. I chose
-this station-year because it has a complete year of daily maximum and minimum
-temperature observations. All three plots use this same station and year.
-
-There are **`r weather_check$n_observations` observations** on
-**`r weather_check$n_dates` distinct dates**. The maximum-temperature and
-minimum-temperature variables contain **`r weather_check$missing_tmax`** and
-**`r weather_check$missing_tmin`** missing values, respectively. There are
-**`r weather_check$reversed_temperatures`** records with a minimum temperature
-greater than the maximum temperature. No observations were removed or sampled
-after selecting the station and year.
-
-The original temperature fields are stored as character values in tenths of
-degrees Celsius. I converted them to numeric values and divided by 10; all
-temperature axes below use **degrees Celsius (°C)**. Monthly averages give
-each observed day equal weight at this one station. These plots describe one
-station-year and do not estimate a statewide average or a long-term climate trend.
-
-Hover over a plot to inspect values. Drag to zoom; double-click to reset the
-view. On the line plot, click a legend item to show or hide that series.
-
 Row {data-height=450}
 -----------------------------------------------------------------------
 
-### Monthly mean daily temperatures — line plot
+### Monthly mean temperatures
 
 ```{r monthly-line}
 monthly_plot =
@@ -146,7 +132,9 @@ monthly_plot =
   ) +
   geom_line(linewidth = 0.9) +
   geom_point(size = 2) +
-  scale_color_manual(values = c("#D55E00", "#0072B2")) +
+  scale_color_manual(
+    values = c("Daily maximum" = "#D55E00", "Daily minimum" = "#0072B2")
+  ) +
   labs(
     x = "Month (2010)",
     y = "Monthly mean temperature (°C)",
@@ -155,8 +143,8 @@ monthly_plot =
 
 ggplotly(monthly_plot, tooltip = "text") |>
   layout(
-    margin = list(l = 75, r = 25, b = 100, t = 20),
-    legend = list(orientation = "h", x = 0.2, y = -0.2)
+    margin = list(l = 75, r = 25, b = 95, t = 20),
+    legend = list(orientation = "h", x = 0.5, xanchor = "center", y = -0.2)
   ) |>
   config(displaylogo = FALSE)
 ```
@@ -164,7 +152,7 @@ ggplotly(monthly_plot, tooltip = "text") |>
 Row {data-height=500}
 -----------------------------------------------------------------------
 
-### Daily minimum versus maximum temperature — scatterplot
+### Daily minimum and maximum
 
 ```{r daily-scatter}
 scatter_df =
@@ -193,7 +181,7 @@ ggplotly(scatter_plot, tooltip = "text") |>
 Row {data-height=500}
 -----------------------------------------------------------------------
 
-### Daily maximum temperatures by month — boxplot
+### Daily maxima by month
 
 ```{r monthly-box}
 box_plot =
@@ -209,16 +197,27 @@ ggplotly(box_plot) |>
   config(displaylogo = FALSE)
 ```
 
-Row {data-height=180}
+Row
 -----------------------------------------------------------------------
 
 ### Notes and sources
 
-The line plot shows monthly means, the scatterplot shows individual days,
-and the boxplot summarizes within-month variation in daily maximum temperature.
-The two temperature series are plotted on the same Celsius scale. The
-boxplot summarizes the observations rather than plotting a monthly average.
+<div class="dashboard-notes">
 
-Data: `p8105.datasets::ny_noaa`.
-[Package documentation](https://p8105.github.io/p8105.datasets/reference/ny_noaa.html).
-Course assignment: [P8105 Homework 4](https://p8105.com/homework_4.html).
+Data: [`p8105.datasets::ny_noaa`](https://p8105.com/dataset_noaa.html); station **USC00300055**.
+
+I selected January 1–December 31, 2010, for this station
+and converted the temperature fields from character values in tenths of a degree
+to numeric values in °C. No days were removed or sampled after selection.
+There are **`r weather_check$n_observations` observations** on
+**`r weather_check$n_dates` distinct dates**, with
+**`r weather_check$missing_tmax` missing maxima**,
+**`r weather_check$missing_tmin` missing minima**, and
+**`r weather_check$reversed_temperatures` records where the minimum exceeds the maximum**.
+
+The line chart averages daily minima and maxima within
+each month, giving each day equal weight. Each scatterplot point represents one
+day. The boxplots show the median, middle 50%, and spread of daily maxima within
+each month, rather than monthly averages.
+
+</div>

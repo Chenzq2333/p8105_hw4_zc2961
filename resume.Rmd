@@ -5,40 +5,45 @@ output:
     theme: flatly
     highlight: textmate
     toc: false
+    css: styles.css
 ---
 
 ## Zhiquan Chen
 
-[GitHub](https://github.com/Chenzq2333)
+Master's student in Biostatistics at Columbia University.
+
+[Email](mailto:zhiquanchen64@gmail.com) ·
+[GitHub](https://github.com/Chenzq2333) ·
+[LinkedIn](https://www.linkedin.com/in/zhiquan-chen-039a2738b/)
 
 ## Education
 
-**Mailman school of Public Health**  
-09/2026-05/2028 Master of Biostatistics.
+**Columbia University — Mailman School of Public Health**<br>
+Master's studies in Biostatistics<br>
+September 2026–May 2028 (expected)
 
-Coursework: P8105 Data Science, Columbia University.
-
-
+Relevant coursework: P8105 Data Science.
 
 ## Selected course projects
 
-### Data import and cleaning — P8105 Homework 2
+### P8105 Homework 1
 
-- Imported and cleaned data from CSV and Excel files in R.
-- Organized variables, summarized records, and presented results in R Markdown.
-- [Project repository](https://github.com/Chenzq2333/p8105_hw2_zc2961)
+Summarized penguin data, created a scatterplot, and examined how R handles different variable types.
 
-### Exploratory data analysis — P8105 Homework 3
+[View project on GitHub](https://github.com/Chenzq2333/p8105_hw1_zc2961)
 
-- Explored New York weather, NHANES accelerometer, and Citi Bike data.
-- Used data transformations and visualizations to describe patterns in the data.
-- [Project repository](https://github.com/Chenzq2333/p8105_hw3_zc2961)
+### P8105 Homework 2
 
-## Technical skills
+Cleaned subway and Trash Wheel data and joined participant information with amyloid measurements from an MCI study.
 
-R, tidyverse, ggplot2, R Markdown, Git, and GitHub.
+[View project on GitHub](https://github.com/Chenzq2333/p8105_hw2_zc2961)
 
-## Contact
+### P8105 Homework 3
 
-Use the Email and LinkedIn links in the navigation bar after replacing their
-placeholders in `_site.yml`.
+Explored New York weather, NHANES physical activity, and Citi Bike data using summary tables and visualizations.
+
+[View project on GitHub](https://github.com/Chenzq2333/p8105_hw3_zc2961)
+
+### P8105 Midterm Project
+
+Analyzed monthly McBroken snapshots to describe recorded machine status, changes between months, and geographic patterns.

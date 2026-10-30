@@ -1,0 +1,177 @@
+/* Shared typography and navigation for the website and dashboard. */
+body {
+  background-color: #fff;
+  color: #263746;
+  font-family: "Lato", "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+a {
+  color: #246890;
+}
+
+a:hover,
+a:focus {
+  color: #194b68;
+  text-decoration: underline;
+}
+
+a:focus-visible {
+  outline: 2px solid #246890;
+  outline-offset: 3px;
+}
+
+.navbar-default,
+.navbar-inverse {
+  background-color: #21394d;
+  border-color: #21394d;
+}
+
+.navbar .navbar-brand,
+.navbar .navbar-nav > li > a {
+  color: #fff;
+}
+
+.navbar .navbar-brand:hover,
+.navbar .navbar-brand:focus,
+.navbar .navbar-nav > li > a:hover,
+.navbar .navbar-nav > li > a:focus,
+.navbar .navbar-nav > .active > a,
+.navbar .navbar-nav > .active > a:hover,
+.navbar .navbar-nav > .active > a:focus {
+  background-color: #335269;
+  color: #fff;
+  text-decoration: none;
+}
+
+.main-container {
+  max-width: 960px;
+  padding: 32px 28px 64px;
+}
+
+.main-container h1 {
+  font-size: 38px;
+  line-height: 1.2;
+  margin-bottom: 24px;
+}
+
+.main-container h2 {
+  font-size: 26px;
+  margin-top: 36px;
+  margin-bottom: 14px;
+}
+
+.main-container h3 {
+  font-size: 21px;
+  line-height: 1.4;
+  margin-top: 28px;
+}
+
+.main-container p,
+.main-container li {
+  overflow-wrap: break-word;
+}
+
+.main-container li {
+  margin-bottom: 8px;
+}
+
+.page-intro {
+  font-size: 20px;
+  line-height: 1.6;
+}
+
+.site-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 26px 0 32px;
+}
+
+.site-links .btn {
+  padding: 11px 18px;
+  font-size: 16px;
+  white-space: normal;
+}
+
+.site-links .btn-primary {
+  background-color: #246890;
+  border-color: #246890;
+  color: #fff;
+}
+
+.site-links .btn-default {
+  background-color: #fff;
+  border-color: #246890;
+  color: #246890;
+}
+
+.site-links .btn:hover,
+.site-links .btn:focus {
+  background-color: #194b68;
+  border-color: #194b68;
+  color: #fff;
+  text-decoration: none;
+}
+
+.project-meta {
+  color: #526472;
+  font-size: 15px;
+}
+
+.chart-title {
+  color: #21394d;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.4;
+  padding: 12px 14px;
+}
+
+.chart-wrapper {
+  border-color: #dce4e9;
+}
+
+.chart-wrapper .chart-notes {
+  color: #526472;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.dashboard-intro,
+.dashboard-notes {
+  max-width: 1050px;
+  padding: 4px 6px 8px;
+  overflow-wrap: break-word;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .navbar .navbar-nav > li > a {
+    font-size: 14px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+@media (max-width: 767px) {
+  .main-container {
+    padding: 22px 20px 44px;
+  }
+
+  .main-container h1 {
+    font-size: 32px;
+  }
+
+  .page-intro {
+    font-size: 18px;
+  }
+
+  .navbar .navbar-brand {
+    max-width: calc(100% - 76px);
+    font-size: 17px;
+  }
+
+  .chart-title {
+    font-size: 16px;
+  }
+}
