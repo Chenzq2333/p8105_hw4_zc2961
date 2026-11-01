@@ -90,6 +90,7 @@ a:focus-visible {
 }
 
 .site-links .btn {
+  min-width: 190px;
   padding: 11px 18px;
   font-size: 16px;
   white-space: normal;
@@ -99,12 +100,6 @@ a:focus-visible {
   background-color: #246890;
   border-color: #246890;
   color: #fff;
-}
-
-.site-links .btn-default {
-  background-color: #fff;
-  border-color: #246890;
-  color: #246890;
 }
 
 .site-links .btn:hover,
@@ -173,5 +168,11 @@ a:focus-visible {
 
   .chart-title {
     font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .site-links .btn {
+    width: 100%;
   }
 }

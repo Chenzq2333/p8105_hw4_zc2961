@@ -144,6 +144,7 @@ monthly_plot =
 ggplotly(monthly_plot, tooltip = "text") |>
   layout(
     margin = list(l = 75, r = 25, b = 95, t = 20),
+    xaxis = list(tickangle = "auto", automargin = TRUE),
     legend = list(orientation = "h", x = 0.5, xanchor = "center", y = -0.2)
   ) |>
   config(displaylogo = FALSE)
@@ -169,8 +170,8 @@ scatter_plot =
   ggplot(scatter_df, aes(x = tmin, y = tmax, text = hover_text)) +
   geom_point(color = "#0072B2", alpha = 0.65, size = 1.8) +
   labs(
-    x = "Daily minimum temperature (°C)",
-    y = "Daily maximum temperature (°C)"
+    x = "Daily minimum (°C)",
+    y = "Daily maximum (°C)"
   )
 
 ggplotly(scatter_plot, tooltip = "text") |>
@@ -193,7 +194,10 @@ box_plot =
   )
 
 ggplotly(box_plot) |>
-  layout(margin = list(l = 75, r = 25, b = 75, t = 20)) |>
+  layout(
+    margin = list(l = 75, r = 25, b = 75, t = 20),
+    xaxis = list(tickangle = "auto", automargin = TRUE)
+  ) |>
   config(displaylogo = FALSE)
 ```
 
